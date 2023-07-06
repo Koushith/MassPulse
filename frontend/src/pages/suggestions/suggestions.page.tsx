@@ -28,8 +28,12 @@ export const SuggestionsPage = () => {
 
       if (res.items.length > 0) {
         const extractedComments = res.items.map((comments: any) => {
-          return comments?.snippet?.topLevelComment.snippet.textOriginal;
+          return {
+            comment: comments?.snippet?.topLevelComment.snippet.textOriginal,
+          };
         });
+
+        console.log("extracted comments", extractedComments);
 
         if (extractedComments.length > 0) {
           console.log("extracted text- if block----", extractedComments);
