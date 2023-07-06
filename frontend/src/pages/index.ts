@@ -1,0 +1,5 @@
+export * from './home/home.component'
+export * from './about/about.page'
+export * from './pricing/pricing.page'
+export * from './suggestions/suggestions.page'
+export * from './profile/profile.page'
