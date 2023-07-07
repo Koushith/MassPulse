@@ -13,29 +13,60 @@ import {
   signInWithGooglePopup,
   updateUserHistory,
 } from "../../utils/firebase";
+import { useState } from "react";
+import styled, { keyframes } from "styled-components";
+import { ToastContainer, showToast } from "@cred/neopop-web/lib/components";
+import { Toaster, toast } from "react-hot-toast";
+
+const spinAnimation = keyframes`
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+`;
+
+const Spinner = styled.div`
+  width: 16px;
+  height: 16px;
+  border: 2px solid #ffffff;
+  border-top: 2px solid #8264f6;
+  border-radius: 50%;
+  animation: ${spinAnimation} 0.8s linear infinite;
+`;
 
 export const HeroSection = () => {
   const navigate = useNavigate();
   const { setIsLoggedIn, setUserInfo, userInfo, isLoggedIn } = useAuth();
+  const [isLoading, setIsLoading] = useState(false);
 
   const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
+    try {
+      setIsLoading(true);
+      const { user } = await signInWithGooglePopup();
+      toast.success("Logged In Successfully!");
+      if (user) {
+        setIsLoggedIn(true);
+        setUserInfo({ ...user });
+        console.log(isLoggedIn);
 
-    if (user) {
-      setIsLoggedIn(true);
-      setUserInfo({ ...user });
-      console.log(isLoggedIn);
-      navigate("/suggestions");
+        navigate("/suggestions");
+      }
+      await createUserDocumentFromAuth(user);
+      const res = await updateUserHistory(
+        "DvFkZ3nlPpWNsr4RDH8jYOGlfwK2",
+        "test",
+        123
+      );
+      console.log("persist", res);
+
+      console.log("user info-----------", userInfo);
+    } catch (error) {
+      console.log("something went wrong", error);
+    } finally {
+      setIsLoading(false);
     }
-    await createUserDocumentFromAuth(user);
-    const res = await updateUserHistory(
-      "DvFkZ3nlPpWNsr4RDH8jYOGlfwK2",
-      "test",
-      123
-    );
-    console.log("persist", res);
-
-    console.log("user info-----------", userInfo);
   };
 
   const navigateToInsights = () => {
@@ -44,11 +75,11 @@ export const HeroSection = () => {
 
   return (
     <HeroComponentStyles>
+      <Toaster />
       <div className="form">
         <h1 className="title">
-          Unleash your creative potential and receive valuable insights. Whether
-          you're a vlogger, filmmaker, or content creator, we're here to help
-          you elevate your videos to new heights.
+          Unleash your creative potential and receive valuable insights. we're
+          here to help you elevate your videos to new heights.
         </h1>
 
         <div className="action">
@@ -59,6 +90,7 @@ export const HeroSection = () => {
             </StyledButton>
           ) : (
             <StyledButton onClick={signInWithGoogle}>
+              {isLoading && <Spinner />}
               Login with Google
             </StyledButton>
           )}

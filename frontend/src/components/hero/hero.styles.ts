@@ -64,7 +64,10 @@ export const StyledButton = styled.button`
   position: relative;
   border: none;
   cursor: pointer;
-  display: inline-block;
+  display: flex;
+  align-items:center;
+  justify-content:center;
+  gap:1rem;
   padding: 12px 24px;
   background-color: #8264f6;
   color: #fff;
@@ -75,7 +78,7 @@ export const StyledButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3), 0px 0px 0px 4px #8264f6;
+   
   }
 `;
 

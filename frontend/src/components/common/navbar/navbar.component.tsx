@@ -10,6 +10,7 @@ import {
   signOutUser,
 } from "../../../utils/firebase";
 import { useAuth } from "../../../context";
+import { Toaster, toast } from "react-hot-toast";
 
 export const NavBar = () => {
   const navigate = useNavigate();
@@ -30,12 +31,23 @@ export const NavBar = () => {
 
   const signoutHandler = async () => {
     await signOutUser();
+    toast.error("Logged Out!");
     setUserInfo(null);
     setIsLoggedIn(false);
+    navigate("/");
   };
   return (
     <Container>
       <StyledNavbar>
+        <Toaster
+          toastOptions={{
+            style: {
+              border: "1px solid #713200",
+              padding: "16px",
+              fontSize: "14px",
+            },
+          }}
+        />
         <p className="logo" onClick={() => navigate("/")}>
           Mass.Pulse
         </p>

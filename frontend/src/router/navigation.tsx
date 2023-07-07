@@ -1,7 +1,13 @@
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, Outlet, createBrowserRouter } from "react-router-dom";
 import App from "../App";
 import { AboutPage, HomePage, PricingPage, ProfilePage } from "../pages";
 import { SuggestionsPage } from "../pages/suggestions/suggestions.page";
+import { useAuth } from "../context";
+
+export const ProtectedRoute = () => {
+  const { isLoggedIn } = useAuth();
+  return <>{isLoggedIn ? <Outlet /> : <Navigate to="/" replace />}</>;
+};
 
 export const routerConfig = createBrowserRouter([
   {
@@ -23,7 +29,13 @@ export const routerConfig = createBrowserRouter([
       },
       {
         path: "/suggestions",
-        element: <SuggestionsPage />,
+        element: <ProtectedRoute />,
+        children: [
+          {
+            path: "/suggestions",
+            element: <SuggestionsPage />,
+          },
+        ],
       },
       {
         path: "/profile",

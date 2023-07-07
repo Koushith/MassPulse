@@ -9,12 +9,16 @@ import {
 } from "../../utils";
 import { StyledButton } from "../../components/hero/hero.styles";
 import { HistoryCard, SuggestionsPageContainer } from "./suggestions.styles";
+import { useAuth } from "../../context";
 
 export const SuggestionsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [videoID, setVideoID] = useState("");
   const [extractedText, setExtractedText] = useState([]);
   const [finalResponse, setFinalResponse] = useState([]);
+
+  const { userInfo } = useAuth();
+  console.log(userInfo);
 
   const fetchallComments = async () => {
     try {
@@ -96,7 +100,9 @@ export const SuggestionsPage = () => {
   };
   return (
     <SuggestionsPageContainer>
-      {" "}
+      <div>
+        <h1>Hello {userInfo?.displayName}</h1>
+      </div>{" "}
       <div className="actions">
         <div className="form">
           <input

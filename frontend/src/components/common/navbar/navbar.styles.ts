@@ -7,6 +7,7 @@ export const StyledNavbar = styled.div`
   .logo{
     font-size:1.6rem;
     font-weight:900;
+    cursor: pointer;
    
   }
 padding: 1.2rem 2rem;
