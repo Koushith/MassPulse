@@ -65,6 +65,7 @@ export const SuggestionsPage = () => {
   };
 
   const fetchFullResponse = async (extractedComments: string) => {
+    console.log("extracted comments-----", extractedComments);
     try {
       setIsLoading(true);
       setIsOutputGenerated(true);
@@ -76,28 +77,33 @@ export const SuggestionsPage = () => {
 
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        //prompt: `${extractedComments} - Based on the analysis of the comments of my youtube channel, What users are looking for? How are they feeling about content? can you suggest some of the improvements and actionable in the content?`,
-        prompt: `${extractedComments} - This is an array of comments for one particular YouTube video, can you provide improvements and suggestions to the creator based on these comments, please ensure to provide references to`,
+        // prompt: `${JSON.stringify(
+        //   extractedComments
+        // )} - Based on the analysis of the comments of my youtube channel, What users are looking for? How are they feeling about content? can you suggest some of the improvements and actionable in the content?`,
+        prompt: `Below is an array of comments for a YouTube video. Based on these comments, please provide suggestions for the creator to improve their content. Please refer to specific comments when giving suggestions: \n\n${JSON.stringify(
+          extractedComments
+        )}`,
+        max_tokens: 2000,
       });
 
-      const secondResponse = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: `${response.data.choices[0].text} - add more with examples if possible`,
-        max_tokens: 1000,
-      });
+      // const secondResponse = await openai.createCompletion({
+      //   model: "text-davinci-003",
+      //   prompt: `${response.data.choices[0].text} - add more with examples if possible`,
+      //   max_tokens: 1000,
+      // });
 
       console.log(
         "combine---------------------- ",
-        response.data.choices[0].text,
-        secondResponse.data.choices[0].text
+        response.data.choices[0].text
+        // secondResponse.data.choices[0].text
       );
 
       const res1 = response.data.choices[0].text;
-      const res2 = secondResponse.data.choices[0].text;
+      // const res2 = secondResponse.data.choices[0].text;
       // const res3 = thirdResponse.data.choices[0].text;
 
       //@ts-ignore
-      setFinalResponse([res1, res2]);
+      setFinalResponse([res1]);
     } catch (err) {
       console.log("something went wrong----", err);
       toast.error("Something went wrong, couldn't generate the response");
