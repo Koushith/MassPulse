@@ -80,8 +80,8 @@ export const HeroSection = () => {
       <Toaster />
       <div className="form">
         <h1 className="title">
-          Unleash your creative potential and receive valuable insights. we're
-          here to help you elevate your videos to new heights.
+          Amplify Your YouTube Impact! Leverage audience comments for actionable
+          insights
         </h1>
 
         <div className="action">

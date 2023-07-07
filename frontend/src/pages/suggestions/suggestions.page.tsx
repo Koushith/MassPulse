@@ -1,7 +1,8 @@
 //@ts-nocheck
+
 import { InputField, Button, SearchBar } from "@cred/neopop-web/lib/components";
 import { Configuration, OpenAIApi } from "openai";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import {
   OPEN_AI_API_KEY,
@@ -10,24 +11,62 @@ import {
 } from "../../utils";
 import { StyledButton } from "../../components/hero/hero.styles";
 import { HistoryCard, SuggestionsPageContainer } from "./suggestions.styles";
-import { useAuth } from "../../context";
+import { useAuth, useVideo } from "../../context";
 import { Spinner } from "../../components";
 import HeroImage from "../../assets/hero.png";
 import { Toaster, toast } from "react-hot-toast";
 import { getYouTubeVideoInfo } from "../../services";
+import axios from "axios";
 
 export const SuggestionsPage = () => {
   const recentSearches = localStorage.getItem("recentSearches");
   const [isLoading, setIsLoading] = useState(false);
   const [videoID, setVideoID] = useState("");
   const [isOutputGenerated, setIsOutputGenerated] = useState(false);
-  const [history, setHistory] = useState(
-    recentSearches ? JSON.parse(recentSearches) : []
-  );
+  const [history, setHistory] = useState([]);
   const [finalResponse, setFinalResponse] = useState([]);
 
   const { userInfo } = useAuth();
   console.log(userInfo);
+
+  console.log("history coming from context", history);
+
+  const addSearchResult = async (
+    videoTitle: string,
+    videoLink: string,
+    name: string,
+    email: string
+  ) => {
+    try {
+      const record = await axios.post("http://localhost:8000/video", {
+        videoTitle,
+        videoLink,
+        name,
+        email,
+      });
+      console.log("reord inserted?", record);
+    } catch (error) {
+      console.log("something went wrong", error);
+    }
+  };
+
+  const fetchSearch = async (id) => {
+    try {
+      let userID = userInfo?.email;
+
+      const query = await axios.get(`http://localhost:8000/video/${userID}`);
+      console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
+
+      console.log("query", query.data.videoResults);
+      setHistory(query.data.videoResults);
+    } catch (error) {
+      console.log("something went wrong", error.message);
+    }
+  };
+
+  useEffect(() => {
+    fetchSearch();
+  }, []);
 
   const fetchallComments = async () => {
     try {
@@ -40,8 +79,8 @@ export const SuggestionsPage = () => {
       const res = await data.json();
 
       const { title, videoLink } = await getYouTubeVideoInfo(extractedID);
-      setHistory([...history, { title, videoLink }]);
-
+      // setHistory([...history, { title, videoLink }]);
+      addSearchResult(title, videoLink, userInfo.displayName, userInfo.email);
       if (res.items.length > 0) {
         const extractedComments = res.items.map((comments: any) => {
           return {
@@ -56,9 +95,7 @@ export const SuggestionsPage = () => {
           fetchFullResponse(extractedComments);
         }
       }
-
-      console.log("history,", history);
-    } catch (err) {
+    } catch (err: any) {
       console.log("something went wrong...", err.message);
       toast.error("Something went wrong, couldn't generate the response");
     } finally {
@@ -67,7 +104,6 @@ export const SuggestionsPage = () => {
   };
 
   const fetchFullResponse = async (extractedComments: string) => {
-    console.log("extracted comments-----", extractedComments);
     try {
       setIsLoading(true);
       setIsOutputGenerated(true);
@@ -79,12 +115,7 @@ export const SuggestionsPage = () => {
 
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        // prompt: `${JSON.stringify(
-        //   extractedComments
-        // )} - Based on the analysis of the comments of my youtube channel, What users are looking for? How are they feeling about content? can you suggest some of the improvements and actionable in the content?`,
-        // prompt: `Below is an array of comments for a YouTube video. Based on these comments, please provide suggestions for the creator to improve their content. Please refer to specific comments when giving suggestions. : \n\n${JSON.stringify(
-        //   extractedComments
-        // )}`,
+
         prompt: `Following are the comments from a YouTube video:\n\n + ${JSON.stringify(
           extractedComments
         )} + \n\n Please provide suggestions to improve the content based on these comments.
@@ -92,22 +123,8 @@ export const SuggestionsPage = () => {
         max_tokens: 1200,
       });
 
-      // const secondResponse = await openai.createCompletion({
-      //   model: "text-davinci-003",
-      //   prompt: `${response.data.choices[0].text} - add more`,
-      //   max_tokens: 1000,
-      // });
-
-      console.log(
-        "combine---------------------- ",
-        response.data.choices[0].text
-        //  secondResponse.data.choices[0].text
-      );
-
       const res1 = response.data.choices[0].text;
-      // const res2 = secondResponse.data.choices[0].text;
-      // const res3 = thirdResponse.data.choices[0].text;
-      console.log("raw output---", res1);
+
       //@ts-ignore
       setFinalResponse([res1]);
     } catch (err) {
@@ -157,9 +174,9 @@ export const SuggestionsPage = () => {
 
           {history.length > 0 ? (
             <>
-              {history.map((vid, id) => (
+              {history.map((vid: any, id: any) => (
                 <HistoryCard className="history-card">
-                  <p className="title">{vid?.title}</p>
+                  <p className="title">{vid?.videoTitle}</p>
                   <p className="link"> {vid?.videoLink}</p>
                 </HistoryCard>
               ))}

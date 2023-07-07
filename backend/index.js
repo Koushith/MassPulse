@@ -1,10 +1,11 @@
 import express from 'express'
 import connectDB from './utils/db.js'
+import cors from 'cors'
 import { addNewVideo, getAllVideos } from './controllers/video/video.controller.js';
 
 const PORT = 8000
 const app = express()
-// app.use(cors());
+app.use(cors());
 app.use(express.json())
 connectDB()
 
