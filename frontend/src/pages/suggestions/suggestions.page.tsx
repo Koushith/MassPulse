@@ -12,6 +12,8 @@ import { StyledButton } from "../../components/hero/hero.styles";
 import { HistoryCard, SuggestionsPageContainer } from "./suggestions.styles";
 import { useAuth } from "../../context";
 import { Spinner } from "../../components";
+import HeroImage from "../../assets/hero.png";
+import { Toaster, toast } from "react-hot-toast";
 
 export const SuggestionsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -49,6 +51,7 @@ export const SuggestionsPage = () => {
       }
     } catch (err) {
       console.log("something went wrong...", err);
+      toast.error("Something went wrong, couldn't generate the response");
     } finally {
       setIsLoading(false);
     }
@@ -67,7 +70,7 @@ export const SuggestionsPage = () => {
       const response = await openai.createCompletion({
         model: "text-davinci-003",
         prompt: `${extractedComments} - Based on the analysis of the comments of my yotube channel, What users are looking for? How are they feeling about content? can you suggest me some improvements and actionable in the content?`,
-        max_tokens: 1000,
+        max_tokens: 3000,
       });
 
       const secondResponse = await openai.createCompletion({
@@ -104,6 +107,7 @@ export const SuggestionsPage = () => {
       setFinalResponse([res1, res2]);
     } catch (err) {
       console.log("something went wrong----", err);
+      toast.error("Something went wrong, couldn't generate the response");
     } finally {
       setIsLoading(false);
       setVideoID("");
@@ -116,6 +120,13 @@ export const SuggestionsPage = () => {
   };
   return (
     <SuggestionsPageContainer>
+      <Toaster
+        toastOptions={{
+          style: {
+            fontSize: "16px",
+          },
+        }}
+      />
       <div className="actions">
         <div className="user">
           <p>Hello, {userInfo?.displayName} 👋</p>
@@ -181,34 +192,6 @@ export const SuggestionsPage = () => {
         </div>
       </div>
       <div className="response">
-        {/* <p>
-          {isLoading ? (
-            <h1>Loading</h1>
-          ) : (
-            <>
-              <div>
-                {finalResponse.length > 0 ? (
-                  <>
-                    {finalResponse.map((tip, index) => (
-                      <div className="results" key={index}>
-                        <ul>
-                          <li>{tip}</li>
-                        </ul>
-                      </div>
-                    ))}
-                  </>
-                ) : (
-                  <div className="results">
-                    <p>Nothing to show here</p>
-                  </div>
-                )}
-              </div>
-            </>
-          )}
-        </p> */}
-
-        {isLoading && <div>Loading..... </div>}
-
         <div>
           {finalResponse.length > 0 ? (
             <>
@@ -221,8 +204,18 @@ export const SuggestionsPage = () => {
               ))}
             </>
           ) : (
-            <div className="results">
-              <p>Nothing to show.. try pasting a youtube video url</p>
+            <div className="no-results">
+              <img src={HeroImage} alt="hero" />
+
+              {!isOutputGenerated ? (
+                <p>
+                  No Responses Yet!! Paste the YouTuble video URL On input field
+                </p>
+              ) : (
+                <div className="loader-text">
+                  <Spinner /> Generating...
+                </div>
+              )}
             </div>
           )}
         </div>

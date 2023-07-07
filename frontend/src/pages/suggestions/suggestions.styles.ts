@@ -55,6 +55,30 @@ export const SuggestionsPageContainer = styled.div`
     }
   }
 
+  .no-results {
+    img {
+      width: 100%;
+      border-radius: 50%;
+    }
+
+    p {
+      text-align: center;
+      font-size: 1.4rem;
+      margin-top: 2rem;
+      font-weight: 600;
+    }
+
+    .loader-text {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 2rem;
+      font-size: 1.4rem;
+      font-weight: 600;
+    }
+  }
+
   @media (${TABLET}) {
     // Styles for tablets (if needed)
     flex-direction: column;
