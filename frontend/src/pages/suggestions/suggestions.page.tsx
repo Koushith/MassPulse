@@ -76,40 +76,26 @@ export const SuggestionsPage = () => {
 
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `${extractedComments} - Based on the analysis of the comments of my yotube channel, What users are looking for? How are they feeling about content? can you suggest me some improvements and actionable in the content?`,
+        prompt: `${extractedComments} - Based on the analysis of the comments of my youtube channel, What users are looking for? How are they feeling about content? can you suggest some of the improvements and actionable in the content?`,
         max_tokens: 3000,
       });
 
       const secondResponse = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `${response.data.choices[0].text} - add more. show more response if they are looking for any product/course recomendations`,
+        prompt: `${response.data.choices[0].text} - add more with examples if possible`,
         max_tokens: 1000,
       });
-
-      // const thirdResponse = await openai.createCompletion({
-      //   model: "text-davinci-003",
-      //   prompt: `${secondResponse.data.choices[0].text} - score this with just these words - "HAPPY WITH CONTENT","POSITIVE", "NEGATIVE", "MIXED EMOTIONS"`,
-      //   max_tokens: 1000,
-      // });
-
-      // const thirdResponse = await openai.createCompletion({
-      //   model: "text-davinci-003",
-      //   prompt: `${secondResponse.data.choices[0].text} - add more`,
-      //   max_tokens: 2000,
-      // });
 
       console.log(
         "combine---------------------- ",
         response.data.choices[0].text,
         secondResponse.data.choices[0].text
-        // thirdResponse.data.choices[0].text
       );
 
       const res1 = response.data.choices[0].text;
       const res2 = secondResponse.data.choices[0].text;
       // const res3 = thirdResponse.data.choices[0].text;
 
-      console.log("final combined- ", res1, res2);
       //@ts-ignore
       setFinalResponse([res1, res2]);
     } catch (err) {
@@ -121,7 +107,7 @@ export const SuggestionsPage = () => {
       setIsOutputGenerated(false);
     }
   };
-  console.log("final- ", finalResponse);
+
   const submitHandler = () => {
     fetchallComments();
   };
