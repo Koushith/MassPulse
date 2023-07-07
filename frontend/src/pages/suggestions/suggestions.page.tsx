@@ -39,7 +39,10 @@ export const SuggestionsPage = () => {
     email: string
   ) => {
     try {
-      const record = await axios.post(`${BACKEND_BASE_URL}/video`, {
+      const reqUrl = `${BACKEND_BASE_URL}/video`;
+
+      console.log("req urllll--------", reqUrl);
+      const record = await axios.post(reqUrl, {
         videoTitle,
         videoLink,
         name,
@@ -54,8 +57,9 @@ export const SuggestionsPage = () => {
   const fetchSearch = async (id) => {
     try {
       let userID = userInfo?.email;
-
-      const query = await axios.get(`${BACKEND_BASE_URL}/video/${userID}`);
+      const reqUrl = `${BACKEND_BASE_URL}/video/${userID}`;
+      console.log("req url--------------", reqUrl);
+      const query = await axios.get(reqUrl);
       console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
 
       console.log("query", query.data.videoResults);
