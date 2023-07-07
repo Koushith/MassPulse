@@ -76,8 +76,8 @@ export const SuggestionsPage = () => {
 
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `${extractedComments} - Based on the analysis of the comments of my youtube channel, What users are looking for? How are they feeling about content? can you suggest some of the improvements and actionable in the content?`,
-        max_tokens: 3000,
+        //prompt: `${extractedComments} - Based on the analysis of the comments of my youtube channel, What users are looking for? How are they feeling about content? can you suggest some of the improvements and actionable in the content?`,
+        prompt: `${extractedComments} - This is an array of comments for one particular YouTube video, can you provide improvements and suggestions to the creator based on these comments, please ensure to provide references to`,
       });
 
       const secondResponse = await openai.createCompletion({
