@@ -16,19 +16,6 @@ export const NavBar = () => {
   const navigate = useNavigate();
   const { setIsLoggedIn, setUserInfo, userInfo, isLoggedIn } = useAuth();
 
-  const signInWithGoogle = async () => {
-    const { user } = await signInWithGooglePopup();
-
-    if (user) {
-      setIsLoggedIn(true);
-      setUserInfo({ ...user });
-      console.log(isLoggedIn);
-    }
-    // await createUserDocumentFromAuth(user);
-
-    console.log("user info-----------", userInfo);
-  };
-
   const signoutHandler = async () => {
     await signOutUser();
     localStorage.removeItem("userInfo");
@@ -55,10 +42,7 @@ export const NavBar = () => {
 
         <nav>
           <ul>
-            <li>
-              {" "}
-              <Link to="/about">About</Link>
-            </li>
+            <li> {/* <Link to="/about">About</Link> */}</li>
 
             {/* <li>
               {" "}

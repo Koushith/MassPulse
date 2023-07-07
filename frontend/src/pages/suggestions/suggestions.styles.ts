@@ -41,6 +41,10 @@ export const SuggestionsPageContainer = styled.div`
   }
 
   .response {
+    .suggestion-title {
+      font-size: 1.6rem;
+      margin: 2rem 0;
+    }
     .results {
       background-color: #242424;
       padding: 2rem 4rem;

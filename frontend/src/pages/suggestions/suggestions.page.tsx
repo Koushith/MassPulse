@@ -57,7 +57,7 @@ export const SuggestionsPage = () => {
 
       console.log("history,", history);
     } catch (err) {
-      console.log("something went wrong...", err);
+      console.log("something went wrong...", err.message);
       toast.error("Something went wrong, couldn't generate the response");
     } finally {
       setIsLoading(false);
@@ -80,10 +80,14 @@ export const SuggestionsPage = () => {
         // prompt: `${JSON.stringify(
         //   extractedComments
         // )} - Based on the analysis of the comments of my youtube channel, What users are looking for? How are they feeling about content? can you suggest some of the improvements and actionable in the content?`,
-        prompt: `Below is an array of comments for a YouTube video. Based on these comments, please provide suggestions for the creator to improve their content. Please refer to specific comments when giving suggestions. : \n\n${JSON.stringify(
+        // prompt: `Below is an array of comments for a YouTube video. Based on these comments, please provide suggestions for the creator to improve their content. Please refer to specific comments when giving suggestions. : \n\n${JSON.stringify(
+        //   extractedComments
+        // )}`,
+        prompt: `Following are the comments from a YouTube video:\n\n + ${JSON.stringify(
           extractedComments
-        )}`,
-        max_tokens: 1000,
+        )} + \n\n Please provide suggestions to improve the content based on these comments.
+        Include references to the exact comments when giving your suggestions.`,
+        max_tokens: 1200,
       });
 
       // const secondResponse = await openai.createCompletion({
@@ -169,6 +173,9 @@ export const SuggestionsPage = () => {
         <div>
           {finalResponse.length > 0 ? (
             <>
+              <h1 className="suggestion-title">
+                Suggestions for - {history[history.length - 1].title}
+              </h1>
               {finalResponse.map((tip, index) => (
                 <div className="results" key={index}>
                   <ul>
