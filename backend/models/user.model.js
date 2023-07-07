@@ -3,16 +3,12 @@ import mongoose from "mongoose";
 const userSchema = mongoose.Schema({
     email: {
         type: String,
-        required: true,
-        unique: true
     },
     name: {
-
         type: String
     },
     videoTitle: {
         type: String,
-
     },
     videoLink: {
         type: String
@@ -20,6 +16,6 @@ const userSchema = mongoose.Schema({
     response: {
         type: String
     }
-})
+});
 
-export const User = mongoose.model("User", userSchema)
+export const User = mongoose.model("User", userSchema);
