@@ -38,7 +38,7 @@ export const NavBar = () => {
           }}
         />
         <p className="logo" onClick={() => navigate("/")}>
-          Mass.Pulse
+          MassPulse
         </p>
 
         <nav>
