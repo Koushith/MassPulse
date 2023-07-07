@@ -38,12 +38,15 @@ export const SuggestionsPage = () => {
     email: string
   ) => {
     try {
-      const record = await axios.post("http://localhost:8000/video", {
-        videoTitle,
-        videoLink,
-        name,
-        email,
-      });
+      const record = await axios.post(
+        `${process.env.REACT_APP_BACKEND_BASE}/video`,
+        {
+          videoTitle,
+          videoLink,
+          name,
+          email,
+        }
+      );
       console.log("reord inserted?", record);
     } catch (error) {
       console.log("something went wrong", error);
@@ -54,7 +57,9 @@ export const SuggestionsPage = () => {
     try {
       let userID = userInfo?.email;
 
-      const query = await axios.get(`http://localhost:8000/video/${userID}`);
+      const query = await axios.get(
+        `${process.env.REACT_APP_BACKEND_BASE}/video/${userID}`
+      );
       console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
 
       console.log("query", query.data.videoResults);
