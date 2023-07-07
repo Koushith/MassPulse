@@ -31,6 +31,7 @@ export const NavBar = () => {
 
   const signoutHandler = async () => {
     await signOutUser();
+    localStorage.removeItem("userInfo");
     toast.error("Logged Out!");
     setUserInfo(null);
     setIsLoggedIn(false);

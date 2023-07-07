@@ -44,24 +44,26 @@ export const HeroSection = () => {
   const signInWithGoogle = async () => {
     try {
       setIsLoading(true);
-      const { user } = await signInWithGooglePopup();
-      toast.success("Logged In Successfully!");
-      if (user) {
+
+      const savedUserInfo = localStorage.getItem("userInfo");
+
+      if (savedUserInfo) {
         setIsLoggedIn(true);
-        setUserInfo({ ...user });
-        console.log(isLoggedIn);
+      } else {
+        const { user } = await signInWithGooglePopup();
+        toast.success("Logged In Successfully!");
+        if (user) {
+          setIsLoggedIn(true);
+          setUserInfo({ ...user });
+          console.log(isLoggedIn);
+          localStorage.setItem("userInfo", JSON.stringify(user));
 
-        navigate("/suggestions");
+          navigate("/suggestions");
+        }
+        await createUserDocumentFromAuth(user);
+
+        console.log("user info-----------", userInfo);
       }
-      await createUserDocumentFromAuth(user);
-      const res = await updateUserHistory(
-        "DvFkZ3nlPpWNsr4RDH8jYOGlfwK2",
-        "test",
-        123
-      );
-      console.log("persist", res);
-
-      console.log("user info-----------", userInfo);
     } catch (error) {
       console.log("something went wrong", error);
     } finally {
