@@ -27,7 +27,7 @@ const spinAnimation = keyframes`
   }
 `;
 
-const Spinner = styled.div`
+export const Spinner = styled.div`
   width: 16px;
   height: 16px;
   border: 2px solid #ffffff;

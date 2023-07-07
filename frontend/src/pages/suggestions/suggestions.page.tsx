@@ -11,10 +11,12 @@ import {
 import { StyledButton } from "../../components/hero/hero.styles";
 import { HistoryCard, SuggestionsPageContainer } from "./suggestions.styles";
 import { useAuth } from "../../context";
+import { Spinner } from "../../components";
 
 export const SuggestionsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [videoID, setVideoID] = useState("");
+  const [isOutputGenerated, setIsOutputGenerated] = useState(false);
   const [extractedText, setExtractedText] = useState([]);
   const [finalResponse, setFinalResponse] = useState([]);
 
@@ -27,7 +29,7 @@ export const SuggestionsPage = () => {
       const extractedID = extractYouTubeVideoId(videoID);
       console.log(extractedID);
       const data = await fetch(
-        `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${extractedID}&maxResults=20&key=${YOUTUBE_API_KEY}`
+        `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${extractedID}&maxResults=100&key=${YOUTUBE_API_KEY}`
       );
       const res = await data.json();
 
@@ -54,6 +56,8 @@ export const SuggestionsPage = () => {
 
   const fetchFullResponse = async (extractedComments: string) => {
     try {
+      setIsLoading(true);
+      setIsOutputGenerated(true);
       const configuration = new Configuration({
         apiKey: OPEN_AI_API_KEY,
       });
@@ -62,15 +66,21 @@ export const SuggestionsPage = () => {
 
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `${extractedComments} - Based on the analysis of the comments of my yotube channel, How users are feeling? can you suggest me some improvements and actionable in the content?`,
-        max_tokens: 2000,
+        prompt: `${extractedComments} - Based on the analysis of the comments of my yotube channel, What users are looking for? How are they feeling about content? can you suggest me some improvements and actionable in the content?`,
+        max_tokens: 1000,
       });
 
       const secondResponse = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: `${response.data.choices[0].text} - add more`,
-        max_tokens: 2000,
+        prompt: `${response.data.choices[0].text} - add more. show more response if they are looking for any product/course recomendations`,
+        max_tokens: 1000,
       });
+
+      // const thirdResponse = await openai.createCompletion({
+      //   model: "text-davinci-003",
+      //   prompt: `${secondResponse.data.choices[0].text} - score this with just these words - "HAPPY WITH CONTENT","POSITIVE", "NEGATIVE", "MIXED EMOTIONS"`,
+      //   max_tokens: 1000,
+      // });
 
       // const thirdResponse = await openai.createCompletion({
       //   model: "text-davinci-003",
@@ -82,6 +92,7 @@ export const SuggestionsPage = () => {
         "combine---------------------- ",
         response.data.choices[0].text,
         secondResponse.data.choices[0].text
+        // thirdResponse.data.choices[0].text
       );
 
       const res1 = response.data.choices[0].text;
@@ -93,6 +104,10 @@ export const SuggestionsPage = () => {
       setFinalResponse([res1, res2]);
     } catch (err) {
       console.log("something went wrong----", err);
+    } finally {
+      setIsLoading(false);
+      setVideoID("");
+      setIsOutputGenerated(false);
     }
   };
   console.log("final- ", finalResponse);
@@ -111,9 +126,15 @@ export const SuggestionsPage = () => {
             onChange={(e) => setVideoID(e.target.value)}
             value={videoID}
           />
-          <StyledButton className="insight-btn" onClick={submitHandler}>
-            Get Insights
-          </StyledButton>
+          {!isOutputGenerated ? (
+            <StyledButton className="insight-btn" onClick={submitHandler}>
+              Get Insights
+            </StyledButton>
+          ) : (
+            <StyledButton className="insight-btn" onClick={submitHandler}>
+              <Spinner /> Generating...
+            </StyledButton>
+          )}
         </div>
         <div className="history">
           <h2>History</h2>
@@ -160,7 +181,7 @@ export const SuggestionsPage = () => {
         </div>
       </div>
       <div className="response">
-        <p>
+        {/* <p>
           {isLoading ? (
             <h1>Loading</h1>
           ) : (
@@ -178,52 +199,33 @@ export const SuggestionsPage = () => {
                   </>
                 ) : (
                   <div className="results">
-                    <ul>
-                      <li>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Alias, totam veniam saepe dolorem fugit error explicabo
-                        adipisci eius eaque itaque veritatis quae perferendis
-                        tempora sapiente ea cumque, delectus quos voluptatum?
-                        adipisci eius eaque itaque veritatis quae perferendis
-                        tempora sapiente ea cumque, delectus quos voluptatum?
-                      </li>
-                      <li>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Alias, totam veniam saepe dolorem fugit error explicabo
-                        adipisci eius eaque itaque veritatis quae perferendis
-                        tempora sapiente ea cumque, adipisci eius eaque itaque
-                        veritatis quae perferendis tempora sapiente ea cumque,
-                        delectus quos voluptatum?delectus quos voluptatum?
-                      </li>
-                      <li>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Alias, totam veniam saepe dolorem fugit error explicabo
-                        adipisci eius eaque it adipisci eius eaque itaque
-                        veritatis quae perferendis tempora sapiente ea cumque,
-                        delectus quos voluptatum? adipisci eius eaque itaque
-                        veritatis quae perferendis tempora sapiente ea cumque,
-                        delectus quos voluptatum?aque veritatis quae perferendis
-                        tempora sapiente ea cumque, delectus quos voluptatum?
-                      </li>
-                      <li>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Alias, totam veniam saepe dolorem fugit error explicabo
-                        adipisci eius eaque itaque veritatis quae perferendis
-                        tempora sapiente ea cumque, delectus quos voluptatum?
-                      </li>
-                      <li>
-                        Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                        Alias, totam veniam saepe dolorem fugit error explicabo
-                        adipisci eius eaque itaque veritatis quae perferendis
-                        tempora sapiente ea cumque, delectus quos voluptatum?
-                      </li>
-                    </ul>
+                    <p>Nothing to show here</p>
                   </div>
                 )}
               </div>
             </>
           )}
-        </p>
+        </p> */}
+
+        {isLoading && <div>Loading..... </div>}
+
+        <div>
+          {finalResponse.length > 0 ? (
+            <>
+              {finalResponse.map((tip, index) => (
+                <div className="results" key={index}>
+                  <ul>
+                    <li>{tip}</li>
+                  </ul>
+                </div>
+              ))}
+            </>
+          ) : (
+            <div className="results">
+              <p>Nothing to show.. try pasting a youtube video url</p>
+            </div>
+          )}
+        </div>
       </div>
     </SuggestionsPageContainer>
   );
