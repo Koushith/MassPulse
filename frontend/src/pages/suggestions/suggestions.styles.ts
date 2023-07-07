@@ -94,6 +94,7 @@ export const SuggestionsPageContainer = styled.div`
 `;
 
 export const HistoryCard = styled.div`
+  cursor: pointer;
   border: 1px solid rgb(115, 114, 115);
   margin-bottom: 1rem;
   padding: 2rem;

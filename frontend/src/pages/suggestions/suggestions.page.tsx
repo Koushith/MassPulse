@@ -175,7 +175,10 @@ export const SuggestionsPage = () => {
           {history.length > 0 ? (
             <>
               {history.map((vid: any, id: any) => (
-                <HistoryCard className="history-card">
+                <HistoryCard
+                  className="history-card"
+                  onClick={() => window.open(`${vid?.videoLink}`)}
+                >
                   <p className="title">{vid?.videoTitle}</p>
                   <p className="link"> {vid?.videoLink}</p>
                 </HistoryCard>
