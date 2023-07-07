@@ -17,10 +17,13 @@ import { Toaster, toast } from "react-hot-toast";
 import { getYouTubeVideoInfo } from "../../services";
 
 export const SuggestionsPage = () => {
+  const recentSearches = localStorage.getItem("recentSearches");
   const [isLoading, setIsLoading] = useState(false);
   const [videoID, setVideoID] = useState("");
   const [isOutputGenerated, setIsOutputGenerated] = useState(false);
-  const [history, setHistory] = useState([]);
+  const [history, setHistory] = useState(
+    recentSearches ? JSON.parse(recentSearches) : []
+  );
   const [finalResponse, setFinalResponse] = useState([]);
 
   const { userInfo } = useAuth();
@@ -38,7 +41,6 @@ export const SuggestionsPage = () => {
 
       const { title, videoLink } = await getYouTubeVideoInfo(extractedID);
       setHistory([...history, { title, videoLink }]);
-      console.log("video info", title, videoLink);
 
       if (res.items.length > 0) {
         const extractedComments = res.items.map((comments: any) => {
