@@ -14,12 +14,13 @@ import { useAuth } from "../../context";
 import { Spinner } from "../../components";
 import HeroImage from "../../assets/hero.png";
 import { Toaster, toast } from "react-hot-toast";
+import { getYouTubeVideoInfo } from "../../services";
 
 export const SuggestionsPage = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [videoID, setVideoID] = useState("");
   const [isOutputGenerated, setIsOutputGenerated] = useState(false);
-  const [extractedText, setExtractedText] = useState([]);
+  const [history, setHistory] = useState([]);
   const [finalResponse, setFinalResponse] = useState([]);
 
   const { userInfo } = useAuth();
@@ -35,6 +36,10 @@ export const SuggestionsPage = () => {
       );
       const res = await data.json();
 
+      const { title, videoLink } = await getYouTubeVideoInfo(extractedID);
+      setHistory([...history, { title, videoLink }]);
+      console.log("video info", title, videoLink);
+
       if (res.items.length > 0) {
         const extractedComments = res.items.map((comments: any) => {
           return {
@@ -49,6 +54,8 @@ export const SuggestionsPage = () => {
           fetchFullResponse(extractedComments);
         }
       }
+
+      console.log("history,", history);
     } catch (err) {
       console.log("something went wrong...", err);
       toast.error("Something went wrong, couldn't generate the response");
@@ -148,47 +155,22 @@ export const SuggestionsPage = () => {
           )}
         </div>
         <div className="history">
-          <h2>History</h2>
-          <HistoryCard className="history-card">
-            <p className="title">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum,
-              provident?
-            </p>
-            <p className="link"> http://koushith.com</p>
-          </HistoryCard>
-          <HistoryCard className="history-card">
-            <p className="title">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum,
-              provident?
-            </p>
-            <p className="link"> http://koushith.com</p>
-          </HistoryCard>
-          <HistoryCard className="history-card">
-            <p className="title">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum,
-              provident?
-            </p>
-            <p className="link">
-              {" "}
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Ab
-              voluptatum magnam repudiandae nemo deserunt possimus provident
-              aperiam rerum laborum enim!
-            </p>
-          </HistoryCard>
-          <HistoryCard className="history-card">
-            <p className="title">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum,
-              provident?
-            </p>
-            <p className="link"> http://koushith.com</p>
-          </HistoryCard>
-          <HistoryCard className="history-card">
-            <p className="title">
-              Lorem ipsum dolor sit amet consectetur adipisicing elit. Earum,
-              provident?
-            </p>
-            <p className="link"> http://koushith.com</p>
-          </HistoryCard>
+          <h2>Recent Searches</h2>
+
+          {history.length > 0 ? (
+            <>
+              {history.map((vid, id) => (
+                <HistoryCard className="history-card">
+                  <p className="title">{vid?.title}</p>
+                  <p className="link"> {vid?.videoLink}</p>
+                </HistoryCard>
+              ))}
+            </>
+          ) : (
+            <HistoryCard>
+              <p className="title">Your recent search will appear here...</p>
+            </HistoryCard>
+          )}
         </div>
       </div>
       <div className="response">
