@@ -1,4 +1,5 @@
 import styled, { keyframes } from "styled-components";
+import { PHONE, TABLET } from "../../utils";
 
 export const HeroComponentStyles = styled.section`
   display: flex;
@@ -6,7 +7,7 @@ export const HeroComponentStyles = styled.section`
   justify-content: space-between;
   padding: 0 2rem;
   margin-top: 20em;
-  gap:5rem;
+  gap: 5rem;
   .form {
     display: flex;
     gap: 1.4rem;
@@ -21,15 +22,15 @@ export const HeroComponentStyles = styled.section`
     }
 
     .action {
-      margin-top:2rem;
-      display:flex;
-      align-items:center;
-     gap:2rem;
+      margin-top: 2rem;
+      display: flex;
+      align-items: center;
+      gap: 2rem;
       .creators-list {
         display: flex;
         align-items: center;
         gap: 1rem;
-      
+
         font-size: 1.4rem;
         color: #fff;
         margin-left: 1rem;
@@ -58,6 +59,29 @@ export const HeroComponentStyles = styled.section`
         } */
     }
   }
+
+  @media (${TABLET}) {
+    // Styles for tablets (if needed)
+    .title {
+      text-align: center;
+      font-size: 1.8rem;
+    }
+    flex-direction: column;
+    width: 100%;
+
+    .action {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .hero-image {
+      display: none;
+    }
+  }
+
+  @media (${PHONE}) {
+    // Styles for tablets (if needed)
+  }
 `;
 
 export const StyledButton = styled.button`
@@ -65,9 +89,9 @@ export const StyledButton = styled.button`
   border: none;
   cursor: pointer;
   display: flex;
-  align-items:center;
-  justify-content:center;
-  gap:1rem;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
   padding: 12px 24px;
   background-color: #8264f6;
   color: #fff;
@@ -78,7 +102,6 @@ export const StyledButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-   
   }
 `;
 

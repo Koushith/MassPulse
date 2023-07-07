@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { InputField, Button, SearchBar } from "@cred/neopop-web/lib/components";
 import { Configuration, OpenAIApi } from "openai";
 import { useState } from "react";
@@ -100,10 +101,10 @@ export const SuggestionsPage = () => {
   };
   return (
     <SuggestionsPageContainer>
-      <div>
-        <h1>Hello {userInfo?.displayName}</h1>
-      </div>{" "}
       <div className="actions">
+        <div className="user">
+          <p>Hello, {userInfo?.displayName} 👋</p>
+        </div>{" "}
         <div className="form">
           <input
             placeholder="Enter your Video URL"
@@ -114,7 +115,6 @@ export const SuggestionsPage = () => {
             Get Insights
           </StyledButton>
         </div>
-
         <div className="history">
           <h2>History</h2>
           <HistoryCard className="history-card">
