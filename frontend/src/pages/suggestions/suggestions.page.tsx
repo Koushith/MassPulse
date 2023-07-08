@@ -192,11 +192,9 @@ export const SuggestionsPage = () => {
     }
   };
 
-  const suggestionsFor: string =
-    (history &&
-      history.length > 0 &&
-      history[history.length - 1]?.videoTitle) ||
-    "Video";
+  const suggestionsFor =
+  (history.length > 0 && history[history.length - 1]?.videoTitle) || "Video";
+
 
   const renderString = (text: string) => {
     const points = text.split(/\d+\./).filter(Boolean);
