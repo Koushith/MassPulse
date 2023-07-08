@@ -174,19 +174,22 @@ export const SuggestionsPage = () => {
   };
   console.log("final response----from state", finalResponse);
 
-  const fetchPreviousResponse = async (videoLink: string) => {
+  const fetchPreviousResponse = async (
+    videoLink: string,
+    videoTitle: string
+  ) => {
     try {
       //get comments and set the new
 
       console.log(videoLink);
       const extractedId = extractYouTubeVideoId(videoLink);
-      console.log(extractedId, videoID);
 
       const { data } = await axios.get(
         `${BACKEND_BASE_URL}/video/search/${extractedId}`
       );
       console.log("prev resp ======----====-", data);
       setFromPreviousResponse(data.video);
+      setHistoryTitle(videoTitle);
     } catch (e) {
       console.log("couldnt get previous resp", e.message);
     }
@@ -241,7 +244,9 @@ export const SuggestionsPage = () => {
               {history?.map((vid: any, id: any) => (
                 <HistoryCard
                   className="history-card"
-                  onClick={() => fetchPreviousResponse(vid?.videoLink)}
+                  onClick={() =>
+                    fetchPreviousResponse(vid?.videoLink, vid?.videoTitle)
+                  }
                   key={id}
                 >
                   <p className="title">{vid?.videoTitle}</p>
@@ -272,7 +277,9 @@ export const SuggestionsPage = () => {
               ))}
 
               <div className="previous-responses">
-                <h1 className="title">Previous Responses for </h1>
+                <h1 className="title">
+                  Previous Responses for --- {historyTitle}
+                </h1>
 
                 {fromPreviousResponse.map((tip, index) => (
                   <div className="results" key={index}>
