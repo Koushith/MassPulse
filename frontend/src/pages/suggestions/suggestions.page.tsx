@@ -279,7 +279,7 @@ export const SuggestionsPage = () => {
 
               <div className="previous-responses">
                 <h1 className="title">
-                  Previous Responses for --- {historyTitle}
+                  Previous Responses for - {historyTitle}
                 </h1>
 
                 {fromPreviousResponse.map((tip, index) => (
