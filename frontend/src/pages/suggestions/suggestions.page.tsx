@@ -237,6 +237,55 @@ export const SuggestionsPage = () => {
             </StyledButton>
           )}
         </div>
+        {/* start- mob */}
+        <div className="response  hide-on-desktop">
+          <div>
+            {finalResponse?.length > 0 ? (
+              <>
+                <h1 className="suggestion-title">
+                  Suggestions for -{suggestionsFor}
+                </h1>
+                {finalResponse.map((tip, index) => (
+                  <div className="results" key={index}>
+                    <ul>
+                      <li>{renderString(tip)}</li>
+                    </ul>
+                  </div>
+                ))}
+
+                <div className="previous-responses">
+                  <h1 className="title">
+                    Previous Responses for - {historyTitle}
+                  </h1>
+
+                  {fromPreviousResponse.map((tip, index) => (
+                    <div className="results" key={index}>
+                      <ul>
+                        <li>{tip}</li>
+                      </ul>
+                    </div>
+                  ))}
+                </div>
+              </>
+            ) : (
+              <div className="no-results">
+                <img src={HeroImage} alt="hero" />
+
+                {!isOutputGenerated ? (
+                  <p>
+                    No Responses Yet!! Paste the YouTuble video URL On input
+                    field
+                  </p>
+                ) : (
+                  <div className="loader-text">
+                    <Spinner /> Generating...
+                  </div>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+        {/* end */}
         <div className="history">
           <h2>Recent Searches</h2>
 
@@ -262,7 +311,7 @@ export const SuggestionsPage = () => {
           )}
         </div>
       </div>
-      <div className="response">
+      <div className="response hide-on-phone">
         <div>
           {finalResponse?.length > 0 ? (
             <>

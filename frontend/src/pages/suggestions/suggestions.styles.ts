@@ -1,5 +1,6 @@
 import styled from "styled-components";
-import { TABLET } from "../../utils";
+
+import { PHONE, TABLET } from "../../utils";
 
 export const SuggestionsPageContainer = styled.div`
   display: flex;
@@ -68,6 +69,13 @@ export const SuggestionsPageContainer = styled.div`
     }
   }
 
+  .hide-on-desktop {
+    display: none;
+  }
+  .hide-on-phone {
+    display: inline;
+  }
+
   .no-results {
     img {
       width: 100%;
@@ -98,6 +106,15 @@ export const SuggestionsPageContainer = styled.div`
 
     .actions {
       min-width: 100%;
+    }
+  }
+
+  @media (${PHONE}) {
+    .hide-on-desktop {
+      display: inline;
+    }
+    .hide-on-phone {
+      display: none;
     }
   }
 `;
