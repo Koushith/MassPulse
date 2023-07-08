@@ -3,7 +3,7 @@ import connectDB from './utils/db.js'
 import cors from 'cors'
 import { addNewVideo, getAllVideos, getPreviousResponseById, updateResponse } from './controllers/video/video.controller.js';
 
-const PORT = 8000
+const PORT = process.env.PORT || 8000
 const app = express()
 app.use(cors());
 app.use(express.json())
@@ -18,6 +18,5 @@ app.get('/', (req, res) => {
 })
 
 app.listen(PORT, (req, res) => {
-
-    console.log(`App is runing on the Port---${PORT}`)
-})
+  console.log(`App is runing on the Port---${PORT}`);
+});
