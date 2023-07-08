@@ -29,15 +29,15 @@ export const AuthProvider = ({ children }: any) => {
     setUserInfo,
   };
 
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setIsLoggedIn(true);
-        setUserInfo(user);
-      }
-    });
-    return () => unsubscribe();
-  }, [auth]);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       setIsLoggedIn(true);
+  //       setUserInfo(user);
+  //     }
+  //   });
+  //   return () => unsubscribe();
+  // }, [auth]);
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };

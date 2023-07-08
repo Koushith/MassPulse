@@ -180,18 +180,19 @@ export const SuggestionsPage = () => {
   ) => {
     try {
       //get comments and set the new
-
+      setHistoryTitle(videoTitle);
       console.log(videoLink);
       const extractedId = extractYouTubeVideoId(videoLink);
-
+      console.log("extractedid", extractedId);
+      console.log("vlideo link,", videoLink);
+      console.log("videoTitle,", videoTitle);
       const { data } = await axios.get(
         `${BACKEND_BASE_URL}/video/search/${extractedId}`
       );
       console.log("prev resp ======----====-", data);
       setFromPreviousResponse(data.video);
-      setHistoryTitle(videoTitle);
     } catch (e) {
-      console.log("couldnt get previous resp", e.message);
+      console.log("couldnt get previous resp", e.message, e);
     }
   };
 
