@@ -123,6 +123,15 @@ export const SuggestionsPageContainer = styled.div`
     .hide-on-phone {
       display: none;
     }
+
+    .no-results {
+      margin-top: 2rem;
+    }
+
+    .response,
+    .results {
+      padding: 2rem 2.4rem !important;
+    }
   }
 `;
 
