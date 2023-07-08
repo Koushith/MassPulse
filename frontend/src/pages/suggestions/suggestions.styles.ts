@@ -107,6 +107,13 @@ export const SuggestionsPageContainer = styled.div`
     .actions {
       min-width: 100%;
     }
+
+    .hide-on-desktop {
+      display: inline;
+    }
+    .hide-on-phone {
+      display: none;
+    }
   }
 
   @media (${PHONE}) {
