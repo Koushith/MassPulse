@@ -63,13 +63,13 @@ export const SuggestionsPage = () => {
       console.log("req url------getttt--------", reqUrl);
       const query = await axios.get(reqUrl);
       console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
-      console.log("hagshfgshdfgs", query.data.query.videoTitle);
+
       console.log("query", query.data.videoResults);
       setHistory(query.data.videoResults);
 
       // setHistoryTitle(query.data.query.videoTitle);
     } catch (error) {
-      console.log("something went wrong", error.message);
+      console.log("something went wrong", error.message, error);
     }
   };
 
@@ -195,7 +195,6 @@ export const SuggestionsPage = () => {
   const suggestionsFor =
     history.length > 0 ? history[history.length - 1]?.videoTitle : "Video";
 
-
   const renderString = (text: string) => {
     const points = text.split(/\d+\./).filter(Boolean);
 
@@ -262,7 +261,7 @@ export const SuggestionsPage = () => {
           {finalResponse?.length > 0 ? (
             <>
               <h1 className="suggestion-title">
-                Suggestions for - {suggestionsFor}
+                Suggestions for - -{suggestionsFor}
               </h1>
               {finalResponse.map((tip, index) => (
                 <div className="results" key={index}>
@@ -273,7 +272,7 @@ export const SuggestionsPage = () => {
               ))}
 
               <div className="previous-responses">
-                <h1 className="title">Previous Responses for - </h1>
+                <h1 className="title">Previous Responses for </h1>
 
                 {fromPreviousResponse.map((tip, index) => (
                   <div className="results" key={index}>
