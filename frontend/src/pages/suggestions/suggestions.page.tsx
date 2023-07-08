@@ -63,10 +63,10 @@ export const SuggestionsPage = () => {
       console.log("req url------getttt--------", reqUrl);
       const query = await axios.get(reqUrl);
       console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
-
+      console.log("hagshfgshdfgs", query.data.query.videoTitle);
       console.log("query", query.data.videoResults);
       setHistory(query.data.videoResults);
-      console.log("hagshfgshdfgs", query.data.query.videoTitle);
+
       // setHistoryTitle(query.data.query.videoTitle);
     } catch (error) {
       console.log("something went wrong", error.message);
