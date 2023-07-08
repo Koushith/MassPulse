@@ -45,24 +45,17 @@ export const HeroSection = () => {
     try {
       setIsLoading(true);
 
-      const savedUserInfo = localStorage.getItem("userInfo");
-
-      if (savedUserInfo) {
+      const { user } = await signInWithGooglePopup();
+      toast.success("Logged In Successfully!");
+      if (user) {
         setIsLoggedIn(true);
-      } else {
-        const { user } = await signInWithGooglePopup();
-        toast.success("Logged In Successfully!");
-        if (user) {
-          setIsLoggedIn(true);
-          setUserInfo({ ...user });
-          console.log(isLoggedIn);
-          localStorage.setItem("userInfo", JSON.stringify(user));
+        setUserInfo({ ...user });
+        console.log(isLoggedIn);
+        // localStorage.setItem("userInfo", JSON.stringify(user));
 
-          navigate("/suggestions");
-        }
+        navigate("/suggestions");
+
         await createUserDocumentFromAuth(user);
-
-        console.log("user info-----------", userInfo);
       }
     } catch (error) {
       console.log("something went wrong", error);

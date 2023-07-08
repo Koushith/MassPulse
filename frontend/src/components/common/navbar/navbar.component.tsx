@@ -18,8 +18,8 @@ export const NavBar = () => {
 
   const signoutHandler = async () => {
     await signOutUser();
-    localStorage.removeItem("userInfo");
-    localStorage.removeItem("recentSearches");
+    // localStorage.removeItem("userInfo");
+    // localStorage.removeItem("recentSearches");
     toast.error("Logged Out!");
     setUserInfo(null);
     setIsLoggedIn(false);

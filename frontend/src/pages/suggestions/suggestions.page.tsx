@@ -1,6 +1,4 @@
 //@ts-nocheck
-
-import { InputField, Button, SearchBar } from "@cred/neopop-web/lib/components";
 import { Configuration, OpenAIApi } from "openai";
 import { useEffect, useState } from "react";
 
@@ -41,7 +39,7 @@ export const SuggestionsPage = () => {
     videoId: string
   ) => {
     try {
-      const reqUrl = `${BACKEND_BASE_LOCAL}/video`;
+      const reqUrl = `${BACKEND_BASE_URL}/video`;
 
       console.log("req urllll---posttt-----", reqUrl);
       const record = await axios.post(reqUrl, {
@@ -60,7 +58,7 @@ export const SuggestionsPage = () => {
   const fetchSearch = async (id) => {
     try {
       let userID = userInfo?.email;
-      const reqUrl = `${BACKEND_BASE_LOCAL}/video/${userID}`;
+      const reqUrl = `${BACKEND_BASE_URL}/video/${userID}`;
       console.log("req url------getttt--------", reqUrl);
       const query = await axios.get(reqUrl);
       console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
@@ -96,7 +94,7 @@ export const SuggestionsPage = () => {
         extractedID
       );
 
-      if (res.items.length > 0) {
+      if (res?.items?.length > 0) {
         const extractedComments = res.items.map((comments: any) => {
           return {
             comment: comments?.snippet?.topLevelComment.snippet.textOriginal,
@@ -105,7 +103,7 @@ export const SuggestionsPage = () => {
 
         console.log("extracted comments", extractedComments);
 
-        if (extractedComments.length > 0) {
+        if (extractedComments?.length > 0) {
           console.log("extracted text- if block----", extractedComments);
           fetchFullResponse(extractedComments, extractedID);
         }
@@ -160,7 +158,7 @@ export const SuggestionsPage = () => {
 
   const updateResponseToDB = (response: string, extractedID: string) => {
     try {
-      const reqUrl = `${BACKEND_BASE_LOCAL}/video/update`;
+      const reqUrl = `${BACKEND_BASE_URL}/video/update`;
       const update = axios.post(reqUrl, {
         videoId: extractedID,
         response: JSON.stringify(response),
@@ -175,15 +173,17 @@ export const SuggestionsPage = () => {
 
   const fetchPreviousResponse = async (videoLink: string) => {
     try {
+      //get comments and set the new
+
       console.log(videoLink);
       const extractedId = extractYouTubeVideoId(videoLink);
       console.log(extractedId, videoID);
 
       const { data } = await axios.get(
-        `${BACKEND_BASE_LOCAL}/video/search/${extractedId}`
+        `${BACKEND_BASE_URL}/video/search/${extractedId}`
       );
-      console.log("prev resp =-", data);
-      setFromPreviousResponse(...fromPreviousResponse, data.video);
+      console.log("prev resp ==========-", data);
+      setFromPreviousResponse(data.video);
     } catch (e) {
       console.log("couldnt get previous resp", e.message);
     }
@@ -224,9 +224,9 @@ export const SuggestionsPage = () => {
         <div className="history">
           <h2>Recent Searches</h2>
 
-          {history.length > 0 ? (
+          {history?.length > 0 ? (
             <>
-              {history.map((vid: any, id: any) => (
+              {history?.map((vid: any, id: any) => (
                 <HistoryCard
                   className="history-card"
                   onClick={() => fetchPreviousResponse(vid?.videoLink)}
@@ -260,12 +260,15 @@ export const SuggestionsPage = () => {
               ))}
 
               <div className="previous-responses">
-                <h1 className="title">Previos Responses</h1>
-                <div className="results">
-                  <ul>
-                    <li>sdhfghhsgd</li>
-                  </ul>
-                </div>
+                <h1 className="title">Previous Responses</h1>
+
+                {fromPreviousResponse.map((tip, index) => (
+                  <div className="results" key={index}>
+                    <ul>
+                      <li>{tip}</li>
+                    </ul>
+                  </div>
+                ))}
               </div>
             </>
           ) : (

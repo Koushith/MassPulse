@@ -9,13 +9,7 @@ import { useAuth } from "./context";
 
 function App() {
   const { setIsLoggedIn } = useAuth();
-  const savedUserInfo = localStorage.getItem("userInfo");
 
-  useEffect(() => {
-    if (savedUserInfo) {
-      setIsLoggedIn(true);
-    }
-  }, []);
   return (
     <>
       <NavBar />
