@@ -193,7 +193,7 @@ export const SuggestionsPage = () => {
   };
 
   const suggestionsFor =
-  (history.length > 0 && history[history.length - 1]?.videoTitle) || "Video";
+    history.length > 0 ? history[history.length - 1]?.videoTitle : "Video";
 
 
   const renderString = (text: string) => {
