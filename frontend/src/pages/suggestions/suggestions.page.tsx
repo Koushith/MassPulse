@@ -25,6 +25,7 @@ export const SuggestionsPage = () => {
   const [history, setHistory] = useState([]);
   const [finalResponse, setFinalResponse] = useState([]);
   const [fromPreviousResponse, setFromPreviousResponse] = useState([]);
+  const [historyTitle, setHistoryTitle] = useState("");
 
   const { userInfo } = useAuth();
   console.log(userInfo);
@@ -65,6 +66,8 @@ export const SuggestionsPage = () => {
 
       console.log("query", query.data.videoResults);
       setHistory(query.data.videoResults);
+      console.log("hagshfgshdfgs", query.data.query.videoTitle);
+      // setHistoryTitle(query.data.query.videoTitle);
     } catch (error) {
       console.log("something went wrong", error.message);
     }
@@ -182,7 +185,7 @@ export const SuggestionsPage = () => {
       const { data } = await axios.get(
         `${BACKEND_BASE_URL}/video/search/${extractedId}`
       );
-      console.log("prev resp ==========-", data);
+      console.log("prev resp ======----====-", data);
       setFromPreviousResponse(data.video);
     } catch (e) {
       console.log("couldnt get previous resp", e.message);
@@ -272,7 +275,7 @@ export const SuggestionsPage = () => {
               ))}
 
               <div className="previous-responses">
-                <h1 className="title">Previous Responses</h1>
+                <h1 className="title">Previous Responses for - </h1>
 
                 {fromPreviousResponse.map((tip, index) => (
                   <div className="results" key={index}>
