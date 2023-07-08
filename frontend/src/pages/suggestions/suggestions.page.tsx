@@ -41,7 +41,7 @@ export const SuggestionsPage = () => {
     videoId: string
   ) => {
     try {
-      const reqUrl = `${BACKEND_BASE_LOCAL}/video`;
+      const reqUrl = `${BACKEND_BASE_URL}/video`;
 
       console.log("req urllll---posttt-----", reqUrl);
       const record = await axios.post(reqUrl, {
@@ -160,7 +160,7 @@ export const SuggestionsPage = () => {
 
   const updateResponseToDB = (response: string, extractedID: string) => {
     try {
-      const reqUrl = `${BACKEND_BASE_LOCAL}/video/update`;
+      const reqUrl = `${BACKEND_BASE_URL}/video/update`;
       const update = axios.post(reqUrl, {
         videoId: extractedID,
         response: JSON.stringify(response),
