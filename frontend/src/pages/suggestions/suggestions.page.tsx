@@ -189,6 +189,12 @@ export const SuggestionsPage = () => {
     }
   };
 
+  const suggestionsFor: string =
+    (history &&
+      history.length > 0 &&
+      history[history.length - 1]?.videoTitle) ||
+    "Video";
+
   const renderString = (text: string) => {
     const points = text.split(/\d+\./).filter(Boolean);
 
@@ -255,7 +261,7 @@ export const SuggestionsPage = () => {
           {finalResponse.length > 0 ? (
             <>
               <h1 className="suggestion-title">
-                Suggestions for - {history[history.length - 1].videoTitle}
+                Suggestions for - {suggestionsFor}
               </h1>
               {finalResponse.map((tip, index) => (
                 <div className="results" key={index}>
