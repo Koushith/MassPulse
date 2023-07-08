@@ -61,8 +61,6 @@ export const HeroSection = () => {
           navigate("/suggestions");
         }
         await createUserDocumentFromAuth(user);
-
-        console.log("user info-----------", userInfo);
       }
     } catch (error) {
       console.log("something went wrong", error);
