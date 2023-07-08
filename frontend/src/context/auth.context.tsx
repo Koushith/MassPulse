@@ -1,4 +1,6 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
+import { auth, onAuthStateChangedListener } from "../utils/firebase";
+import { onAuthStateChanged } from "firebase/auth";
 
 interface AuthContextType {
   isLoggedIn: boolean;
@@ -19,13 +21,24 @@ export const AuthContext = createContext(initialState);
 export const AuthProvider = ({ children }: any) => {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState({});
-  console.log(userInfo, "userinfoooooo");
+
   const value: AuthContextType = {
     isLoggedIn,
     setIsLoggedIn,
     userInfo,
     setUserInfo,
   };
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setIsLoggedIn(true);
+        setUserInfo(user);
+      }
+    });
+    return () => unsubscribe();
+  }, [auth]);
+
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 };
 
