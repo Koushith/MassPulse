@@ -246,7 +246,7 @@ export const SuggestionsPage = () => {
       </div>
       <div className="response">
         <div>
-          {finalResponse.length > 0 ? (
+          {finalResponse?.length > 0 ? (
             <>
               <h1 className="suggestion-title">
                 Suggestions for - {history[history.length - 1].videoTitle}
