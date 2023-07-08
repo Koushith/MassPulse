@@ -51,7 +51,6 @@ export const HeroSection = () => {
         setIsLoggedIn(true);
         setUserInfo({ ...user });
         console.log(isLoggedIn);
-        // localStorage.setItem("userInfo", JSON.stringify(user));
 
         navigate("/suggestions");
 
