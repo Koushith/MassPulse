@@ -7,14 +7,16 @@ const PORT = process.env.PORT || 8000
 const app = express()
 app.use(cors());
 app.use(express.json())
-connectDB()
+// connectDB()
 
 // app.get('/video/:userId', getAllVideos)
 // app.post('/video', addNewVideo)
 // app.post('/video/update', updateResponse)
 // app.get('/video/search/:videoId', getPreviousResponseById)
 app.get('/', (req, res) => {
-    res.send("This Route works!!")
+    const data = Math.random().toString();
+    console.log("This Route works!!", data);
+    res.send({ hello: data });
 })
 
 app.listen(PORT, () => {
