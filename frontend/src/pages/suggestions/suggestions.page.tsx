@@ -189,6 +189,12 @@ export const SuggestionsPage = () => {
     }
   };
 
+  const renderString = (text: string) => {
+    const points = text.split(/\d+\./).filter(Boolean);
+
+    return points.map((point, index) => <p key={index}>{point.trim()}</p>);
+  };
+
   const submitHandler = () => {
     fetchallComments();
   };
@@ -254,7 +260,7 @@ export const SuggestionsPage = () => {
               {finalResponse.map((tip, index) => (
                 <div className="results" key={index}>
                   <ul>
-                    <li>{tip}</li>
+                    <li>{renderString(tip)}</li>
                   </ul>
                 </div>
               ))}
