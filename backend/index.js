@@ -1,23 +1,36 @@
-import express from 'express'
-import connectDB from './utils/db.js'
-import cors from 'cors'
-import { addNewVideo, getAllVideos, getPreviousResponseById, updateResponse } from './controllers/video/video.controller.js';
+import express from "express";
+import connectDB from "./utils/db.js";
+import cors from "cors";
+import {
+  addNewVideo,
+  getAllVideos,
+  getPreviousResponseById,
+  updateResponse,
+} from "./controllers/video/video.controller.js";
 
-const PORT = 8000
-const app = express()
-app.use(cors());
-app.use(express.json())
-connectDB()
+const PORT = process.env.PORT || 8000;
+const app = express();
 
-app.get('/video/:userId', getAllVideos)
-app.post('/video', addNewVideo)
-app.post('/video/update', updateResponse)
-app.get('/video/search/:videoId', getPreviousResponseById)
-app.get('/', (req, res) => {
-    res.send("This Route works!!")
-})
+const corsConfig = {
+  origin: [
+    "https://masspulse.xyz",
+    "http://localhost:3000",
+    "http://localhost:8000",
+  ],
+};
 
-app.listen(PORT, (req, res) => {
+app.use(cors(corsConfig));
+app.use(express.json());
+connectDB();
 
-    console.log(`App is runing on the Port---${PORT}`)
-})
+app.get("/video/:userId", getAllVideos);
+app.post("/video", addNewVideo);
+app.post("/video/update", updateResponse);
+app.get("/video/search/:videoId", getPreviousResponseById);
+app.get("/", (_, res) => {
+  res.send("This Route works!!");
+});
+
+app.listen(PORT, () => {
+  console.log(`App is runing on the Port---${PORT}`);
+});
