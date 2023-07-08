@@ -128,3 +128,26 @@ export const updateResponse = async (req, res) => {
     }
 }
 
+
+
+export const getPreviousResponseById = async (req, res) => {
+
+    try {
+        const { videoId } = req.params
+        console.log("route was hete ate get video by id route")
+        const query = await User.find({ videoId: videoId })
+
+        console.log("found video by id", query.map(res => res.response).filter((res) => res !== undefined))
+        const filteredRes = query.map(res => res.response).filter((res) => res !== undefined)
+        res.status(200).json({
+            message: "video found",
+            video: filteredRes
+        })
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Something went wrong",
+            error: error.message
+        });
+    }
+}

@@ -21,12 +21,12 @@ import { getYouTubeVideoInfo } from "../../services";
 import axios from "axios";
 
 export const SuggestionsPage = () => {
-  const recentSearches = localStorage.getItem("recentSearches");
   const [isLoading, setIsLoading] = useState(false);
   const [videoID, setVideoID] = useState("");
   const [isOutputGenerated, setIsOutputGenerated] = useState(false);
   const [history, setHistory] = useState([]);
   const [finalResponse, setFinalResponse] = useState([]);
+  const [fromPreviousResponse, setFromPreviousResponse] = useState([]);
 
   const { userInfo } = useAuth();
   console.log(userInfo);
@@ -41,7 +41,7 @@ export const SuggestionsPage = () => {
     videoId: string
   ) => {
     try {
-      const reqUrl = `${BACKEND_BASE_URL}/video`;
+      const reqUrl = `${BACKEND_BASE_LOCAL}/video`;
 
       console.log("req urllll---posttt-----", reqUrl);
       const record = await axios.post(reqUrl, {
@@ -160,7 +160,7 @@ export const SuggestionsPage = () => {
 
   const updateResponseToDB = (response: string, extractedID: string) => {
     try {
-      const reqUrl = `${BACKEND_BASE_URL}/video/update`;
+      const reqUrl = `${BACKEND_BASE_LOCAL}/video/update`;
       const update = axios.post(reqUrl, {
         videoId: extractedID,
         response: JSON.stringify(response),
@@ -172,6 +172,23 @@ export const SuggestionsPage = () => {
     }
   };
   console.log("final response----from state", finalResponse);
+
+  const fetchPreviousResponse = async (videoLink: string) => {
+    try {
+      console.log(videoLink);
+      const extractedId = extractYouTubeVideoId(videoLink);
+      console.log(extractedId, videoID);
+
+      const { data } = await axios.get(
+        `${BACKEND_BASE_LOCAL}/video/search/${extractedId}`
+      );
+      console.log("prev resp =-", data);
+      setFromPreviousResponse(...fromPreviousResponse, data.video);
+    } catch (e) {
+      console.log("couldnt get previous resp", e.message);
+    }
+  };
+
   const submitHandler = () => {
     fetchallComments();
   };
@@ -212,7 +229,8 @@ export const SuggestionsPage = () => {
               {history.map((vid: any, id: any) => (
                 <HistoryCard
                   className="history-card"
-                  onClick={() => window.open(`${vid?.videoLink}`)}
+                  onClick={() => fetchPreviousResponse(vid?.videoLink)}
+                  key={id}
                 >
                   <p className="title">{vid?.videoTitle}</p>
                   <p className="link"> {vid?.videoLink}</p>
@@ -240,6 +258,15 @@ export const SuggestionsPage = () => {
                   </ul>
                 </div>
               ))}
+
+              <div className="previous-responses">
+                <h1 className="title">Previos Responses</h1>
+                <div className="results">
+                  <ul>
+                    <li>sdhfghhsgd</li>
+                  </ul>
+                </div>
+              </div>
             </>
           ) : (
             <div className="no-results">
