@@ -17,6 +17,6 @@ app.get('/', (req, res) => {
     res.send("This Route works!!")
 })
 
-app.listen(PORT, (req, res) => {
+app.listen(PORT, () => {
   console.log(`App is runing on the Port---${PORT}`);
 });
