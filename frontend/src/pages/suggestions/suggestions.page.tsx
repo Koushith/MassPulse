@@ -86,9 +86,9 @@ export const SuggestionsPage = () => {
         `https://youtube.googleapis.com/youtube/v3/commentThreads?part=snippet%2Creplies&videoId=${extractedID}&maxResults=50&key=${YOUTUBE_API_KEY}`
       );
       const res = await data.json();
-
       const { title, videoLink } = await getYouTubeVideoInfo(extractedID);
-      // setHistory([...history, { title, videoLink }]);
+      console.log("historyyyy", title, videoLink);
+      setHistory([...history, { title, videoLink }]);
       addSearchResult(
         title,
         videoLink,
