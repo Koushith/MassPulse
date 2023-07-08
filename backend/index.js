@@ -1,7 +1,7 @@
 import express from 'express'
 import connectDB from './utils/db.js'
 import cors from 'cors'
-import { addNewVideo, getAllVideos, updateResponse } from './controllers/video/video.controller.js';
+import { addNewVideo, getAllVideos, getPreviousResponseById, updateResponse } from './controllers/video/video.controller.js';
 
 const PORT = 8000
 const app = express()
@@ -12,7 +12,7 @@ connectDB()
 app.get('/video/:userId', getAllVideos)
 app.post('/video', addNewVideo)
 app.post('/video/update', updateResponse)
-
+app.get('/video/search/:videoId', getPreviousResponseById)
 app.get('/', (req, res) => {
     res.send("This Route works!!")
 })
