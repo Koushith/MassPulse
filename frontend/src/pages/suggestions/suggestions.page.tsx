@@ -261,7 +261,7 @@ export const SuggestionsPage = () => {
           {finalResponse?.length > 0 ? (
             <>
               <h1 className="suggestion-title">
-                Suggestions for - -{suggestionsFor}
+                Suggestions for -{suggestionsFor}
               </h1>
               {finalResponse.map((tip, index) => (
                 <div className="results" key={index}>
