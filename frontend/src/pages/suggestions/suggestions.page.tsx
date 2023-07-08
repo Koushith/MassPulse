@@ -5,6 +5,7 @@ import { Configuration, OpenAIApi } from "openai";
 import { useEffect, useState } from "react";
 
 import {
+  BACKEND_BASE_LOCAL,
   BACKEND_BASE_URL,
   OPEN_AI_API_KEY,
   YOUTUBE_API_KEY,
@@ -30,35 +31,37 @@ export const SuggestionsPage = () => {
   const { userInfo } = useAuth();
   console.log(userInfo);
 
-  console.log("backend base url", BACKEND_BASE_URL);
+  // console.log("backend base url---- fetching", BACKEND_BASE_URL);
 
   const addSearchResult = async (
     videoTitle: string,
     videoLink: string,
     name: string,
-    email: string
+    email: string,
+    videoId: string
   ) => {
     try {
-      const reqUrl = `${BACKEND_BASE_URL}/video`;
+      const reqUrl = `${BACKEND_BASE_LOCAL}/video`;
 
-      console.log("req urllll--------", reqUrl);
+      console.log("req urllll---posttt-----", reqUrl);
       const record = await axios.post(reqUrl, {
         videoTitle,
         videoLink,
         name,
         email,
+        videoId,
       });
       console.log("reord inserted?", record);
     } catch (error) {
-      console.log("something went wrong", error);
+      console.log("something went wrong", error.message);
     }
   };
 
   const fetchSearch = async (id) => {
     try {
       let userID = userInfo?.email;
-      const reqUrl = `${BACKEND_BASE_URL}/video/${userID}`;
-      console.log("req url--------------", reqUrl);
+      const reqUrl = `${BACKEND_BASE_LOCAL}/video/${userID}`;
+      console.log("req url------getttt--------", reqUrl);
       const query = await axios.get(reqUrl);
       console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
 
@@ -71,7 +74,7 @@ export const SuggestionsPage = () => {
 
   useEffect(() => {
     fetchSearch();
-  }, []);
+  }, [videoID]);
 
   const fetchallComments = async () => {
     try {
@@ -85,7 +88,14 @@ export const SuggestionsPage = () => {
 
       const { title, videoLink } = await getYouTubeVideoInfo(extractedID);
       // setHistory([...history, { title, videoLink }]);
-      addSearchResult(title, videoLink, userInfo.displayName, userInfo.email);
+      addSearchResult(
+        title,
+        videoLink,
+        userInfo.displayName,
+        userInfo.email,
+        extractedID
+      );
+
       if (res.items.length > 0) {
         const extractedComments = res.items.map((comments: any) => {
           return {
@@ -97,7 +107,7 @@ export const SuggestionsPage = () => {
 
         if (extractedComments.length > 0) {
           console.log("extracted text- if block----", extractedComments);
-          fetchFullResponse(extractedComments);
+          fetchFullResponse(extractedComments, extractedID);
         }
       }
     } catch (err: any) {
@@ -108,7 +118,10 @@ export const SuggestionsPage = () => {
     }
   };
 
-  const fetchFullResponse = async (extractedComments: string) => {
+  const fetchFullResponse = async (
+    extractedComments: string,
+    extractedID: string
+  ) => {
     try {
       setIsLoading(true);
       setIsOutputGenerated(true);
@@ -129,9 +142,12 @@ export const SuggestionsPage = () => {
       });
 
       const res1 = response.data.choices[0].text;
-
+      console.log("final response from ai----", res1);
       //@ts-ignore
       setFinalResponse([res1]);
+
+      //update the respone in db
+      updateResponseToDB(res1, extractedID);
     } catch (err) {
       console.log("something went wrong----", err);
       toast.error("Something went wrong, couldn't generate the response");
@@ -142,6 +158,20 @@ export const SuggestionsPage = () => {
     }
   };
 
+  const updateResponseToDB = (response: string, extractedID: string) => {
+    try {
+      const reqUrl = `${BACKEND_BASE_LOCAL}/video/update`;
+      const update = axios.post(reqUrl, {
+        videoId: extractedID,
+        response: JSON.stringify(response),
+      });
+
+      console.log("response updated-----", update);
+    } catch (error) {
+      console.log("error occured while updating---", error);
+    }
+  };
+  console.log("final response----from state", finalResponse);
   const submitHandler = () => {
     fetchallComments();
   };
@@ -201,7 +231,7 @@ export const SuggestionsPage = () => {
           {finalResponse.length > 0 ? (
             <>
               <h1 className="suggestion-title">
-                Suggestions for - {history[history.length - 1].title}
+                Suggestions for - {history[history.length - 1].videoTitle}
               </h1>
               {finalResponse.map((tip, index) => (
                 <div className="results" key={index}>

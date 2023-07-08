@@ -15,7 +15,11 @@ const userSchema = mongoose.Schema({
     },
     response: {
         type: String
+    },
+    videoId: {
+        type: String
     }
+
 });
 
 export const User = mongoose.model("User", userSchema);

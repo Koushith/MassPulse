@@ -62,17 +62,20 @@ export const getAllVideos = async (req, res) => {
 
 export const addNewVideo = async (req, res) => {
     try {
-        const { email, videoLink, name, videoTitle, response } = req.body;
-        console.log(email, videoLink, name, videoTitle, response)
+        console.log("route was here")
+        const { email, videoLink, name, videoTitle, videoId } = req.body;
+        console.log(email, videoLink, name, videoTitle, videoId);
+
+
+
         const record = await User.create({
             email,
             videoLink,
             name,
             videoTitle,
-            response
+            videoId
         });
 
-        console.log(email, videoLink, name, videoTitle, response);
 
         if (record) {
             res.status(201).json({
@@ -85,17 +88,43 @@ export const addNewVideo = async (req, res) => {
             });
         }
     } catch (error) {
-        if (error.name === "MongoError" && error.code === 11000) {
-            res.status(409).json({
-                message: "Duplicate email",
-                error: error.keyValue
-            });
-        } else {
-            res.status(500).json({
-                message: "Something went wrong",
-                error
-            });
-        }
+
+        res.status(500).json({
+            message: "Something went wrong",
+            error
+        });
     }
-};
+}
+
+
+
+export const updateResponse = async (req, res) => {
+    try {
+        const { videoId, response } = req.body;
+
+        const findVideo = await User.findOneAndUpdate({ videoId }, {
+            response
+        })
+
+        console.log("find videooo---", findVideo)
+
+        if (findVideo) {
+            res.status(200).json({
+                message: "Response updated",
+                data: findVideo
+            })
+        } else {
+            throw new Error("Something went wrong.. couldnt update")
+            return
+        }
+
+
+
+    } catch (error) {
+        res.status(500).json({
+            message: "Something went wrong",
+            error
+        });
+    }
+}
 
