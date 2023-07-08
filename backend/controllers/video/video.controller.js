@@ -136,9 +136,12 @@ export const getPreviousResponseById = async (req, res) => {
         const { videoId } = req.params
         console.log("route was hete ate get video by id route")
         const query = await User.find({ videoId: videoId })
+        const filteredRespose = await User.find({ videoId: videoId })
 
-        console.log("found video by id", query.map(res => res.response).filter((res) => res !== undefined))
-        console.log("query".query)
+        // console.log("filteredResponse--", filteredRespose)
+
+        //  console.log("found video by id", query.map(res => res.response).filter((res) => res !== undefined))
+        console.log("quersssy----", query.map = (res => { videoTitle: r }))
         const filteredRes = query.map(res => res.response).filter((res) => res !== undefined)
         res.status(200).json({
             message: "video found-",
