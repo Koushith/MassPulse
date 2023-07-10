@@ -8,6 +8,7 @@ import {
   OPEN_AI_API_KEY,
   YOUTUBE_API_KEY,
   extractYouTubeVideoId,
+  getAPIURL,
 } from "../../utils";
 import { StyledButton } from "../../components/hero/hero.styles";
 import { HistoryCard, SuggestionsPageContainer } from "./suggestions.styles";
@@ -40,7 +41,7 @@ export const SuggestionsPage = () => {
     videoId: string
   ) => {
     try {
-      const reqUrl = `${BACKEND_BASE_URL}/video`;
+      const reqUrl = `${getAPIURL()}/video`;
 
       console.log("req urllll---posttt-----", reqUrl);
       const record = await axios.post(reqUrl, {
@@ -50,21 +51,20 @@ export const SuggestionsPage = () => {
         email,
         videoId,
       });
-      console.log("reord inserted?", record);
     } catch (error) {
       console.log("something went wrong", error.message);
     }
   };
 
+  console.log("emvironment test--------", getAPIURL());
+
   const fetchSearch = async (id) => {
     try {
       let userID = userInfo?.email;
-      const reqUrl = `${BACKEND_BASE_URL}/video/${userID}`;
+      const reqUrl = `${getAPIURL()}/video/${userID}`;
       console.log("req url------getttt--------", reqUrl);
       const query = await axios.get(reqUrl);
-      console.log("queryyyyyyyyyyyyyyyy-------", query.data.videoResults);
 
-      console.log("query", query.data.videoResults);
       setHistory(query.data.videoResults);
 
       // setHistoryTitle(query.data.query.videoTitle);
@@ -87,7 +87,7 @@ export const SuggestionsPage = () => {
       );
       const res = await data.json();
       const { title, videoLink } = await getYouTubeVideoInfo(extractedID);
-      console.log("historyyyy", title, videoLink);
+
       setHistory([...history, { title, videoLink }]);
       addSearchResult(
         title,
@@ -104,10 +104,7 @@ export const SuggestionsPage = () => {
           };
         });
 
-        console.log("extracted comments", extractedComments);
-
         if (extractedComments?.length > 0) {
-          console.log("extracted text- if block----", extractedComments);
           fetchFullResponse(extractedComments, extractedID);
         }
       }
@@ -158,21 +155,6 @@ export const SuggestionsPage = () => {
       setIsOutputGenerated(false);
     }
   };
-
-  const updateResponseToDB = (response: string, extractedID: string) => {
-    try {
-      const reqUrl = `${BACKEND_BASE_URL}/video/update`;
-      const update = axios.post(reqUrl, {
-        videoId: extractedID,
-        response: JSON.stringify(response),
-      });
-
-      console.log("response updated-----", update);
-    } catch (error) {
-      console.log("error occured while updating---", error);
-    }
-  };
-  console.log("final response----from state", finalResponse);
 
   const fetchPreviousResponse = async (
     videoLink: string,
