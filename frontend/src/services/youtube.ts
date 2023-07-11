@@ -1,4 +1,6 @@
-import { YOUTUBE_API_KEY } from "../utils";
+import axios from "axios";
+
+import { YOUTUBE_API_KEY, getAPIURL } from "../utils";
 
 export const getYouTubeVideoInfo = async (videoId: string) => {
   const apiKey = YOUTUBE_API_KEY;
@@ -20,5 +22,20 @@ export const getYouTubeVideoInfo = async (videoId: string) => {
   } catch (error) {
     console.error("Error retrieving YouTube video information:", error);
     return null;
+  }
+};
+
+// find the existing response and update it
+export const updateResponseToDB = (response: string, extractedID: string) => {
+  try {
+    const reqUrl = `${getAPIURL()}/video/update`;
+    const update = axios.post(reqUrl, {
+      videoId: extractedID,
+      response: JSON.stringify(response),
+    });
+
+    console.log("updated==", update);
+  } catch (error) {
+    console.log("error occured while updating---", error);
   }
 };
