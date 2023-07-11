@@ -7,3 +7,5 @@ function calculateTokenCount(wordCount: any) {
   );
   return estimatedTokenCount;
 }
+
+export {};
