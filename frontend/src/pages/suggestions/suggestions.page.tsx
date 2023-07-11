@@ -259,10 +259,7 @@ export const SuggestionsPage = () => {
                 <img src={HeroImage} alt="hero" />
 
                 {!isOutputGenerated ? (
-                  <p>
-                    No Responses Yet!! Paste the YouTuble video URL On input
-                    field.
-                  </p>
+                  <p>No Responses Yet!!</p>
                 ) : (
                   <div className="loader-text">
                     <Spinner /> Generating...
