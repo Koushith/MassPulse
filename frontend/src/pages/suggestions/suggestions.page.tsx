@@ -134,7 +134,6 @@ export const SuggestionsPage = () => {
 
       const response = await openai.createCompletion({
         model: "text-davinci-003",
-
         prompt: `Following are the comments from a YouTube video:\n\n + ${JSON.stringify(
           extractedComments
         ).slice(
@@ -260,10 +259,7 @@ export const SuggestionsPage = () => {
                 <img src={HeroImage} alt="hero" />
 
                 {!isOutputGenerated ? (
-                  <p>
-                    No Responses Yet!! Paste the YouTuble video URL On input
-                    field
-                  </p>
+                  <p>No Responses Yet!!</p>
                 ) : (
                   <div className="loader-text">
                     <Spinner /> Generating...
@@ -329,20 +325,6 @@ export const SuggestionsPage = () => {
               </div>
             </>
           ) : (
-            // <div className="no-results">
-            //   <img src={HeroImage} alt="hero" />
-
-            //   {!isOutputGenerated ? (
-            //     <p>
-            //       No Responses Yet!! Paste the YouTuble video URL On input field
-            //     </p>
-            //   ) : (
-            //     <div className="loader-text">
-            //       <Spinner /> Generating...
-            //     </div>
-            //   )}
-            // </div>
-
             <></>
           )}
         </div>
@@ -390,10 +372,7 @@ export const SuggestionsPage = () => {
                   <img src={HeroImage} alt="hero" />
 
                   {!isOutputGenerated ? (
-                    <p>
-                      No Responses Yet!! Paste the YouTuble video URL On input
-                      field
-                    </p>
+                    <p>No Responses Yet!!</p>
                   ) : (
                     <div className="loader-text">
                       <Spinner /> Generating...
