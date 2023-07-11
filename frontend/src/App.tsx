@@ -6,8 +6,10 @@ import axios from "axios";
 import { Container, NavBar } from "./components";
 import { Outlet } from "react-router-dom";
 import { useAuth } from "./context";
+import { getAPIURL } from "./utils";
 
 function App() {
+  console.log("env-", getAPIURL());
   return (
     <>
       <NavBar />

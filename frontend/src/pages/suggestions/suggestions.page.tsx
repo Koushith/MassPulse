@@ -16,7 +16,7 @@ import { useAuth, useVideo } from "../../context";
 import { Spinner } from "../../components";
 import HeroImage from "../../assets/hero.png";
 import { Toaster, toast } from "react-hot-toast";
-import { getYouTubeVideoInfo } from "../../services";
+import { getYouTubeVideoInfo, updateResponseToDB } from "../../services";
 import axios from "axios";
 
 export const SuggestionsPage = () => {
@@ -27,6 +27,8 @@ export const SuggestionsPage = () => {
   const [finalResponse, setFinalResponse] = useState([]);
   const [fromPreviousResponse, setFromPreviousResponse] = useState([]);
   const [historyTitle, setHistoryTitle] = useState("");
+  const [isLoaddedOnInitialClick, setIsLoadedOnInitialClick] = useState(false);
+  const [hasPreviousResponse, setHasPreviosResponse] = useState(false);
 
   const { userInfo } = useAuth();
   console.log(userInfo);
@@ -100,10 +102,11 @@ export const SuggestionsPage = () => {
       if (res?.items?.length > 0) {
         const extractedComments = res.items.map((comments: any) => {
           return {
-            comment: comments?.snippet?.topLevelComment.snippet.textOriginal,
+            user: comments.snippet?.topLevelComment?.snippet?.authorDisplayName,
+            comment: comments?.snippet?.topLevelComment?.snippet?.textOriginal,
           };
         });
-
+        console.log("extracted comments---", extractedComments);
         if (extractedComments?.length > 0) {
           fetchFullResponse(extractedComments, extractedID);
         }
@@ -140,7 +143,7 @@ export const SuggestionsPage = () => {
       });
 
       const res1 = response.data.choices[0].text;
-      console.log("final response from ai----", res1);
+      console.log("final response from ai----", res1?.length);
       //@ts-ignore
       setFinalResponse([res1]);
 
@@ -173,6 +176,8 @@ export const SuggestionsPage = () => {
       );
       console.log("prev resp ======----====-", data);
       setFromPreviousResponse(data.video);
+      setIsLoadedOnInitialClick(true);
+      setHasPreviosResponse(true);
     } catch (e) {
       console.log("couldnt get previous resp", e.message, e);
     }
@@ -273,7 +278,7 @@ export const SuggestionsPage = () => {
 
           {history?.length > 0 ? (
             <>
-              {history?.map((vid: any, id: any) => (
+              {history?.map((vid: any, id: number) => (
                 <HistoryCard
                   className="history-card"
                   onClick={() =>
@@ -323,21 +328,81 @@ export const SuggestionsPage = () => {
               </div>
             </>
           ) : (
-            <div className="no-results">
-              <img src={HeroImage} alt="hero" />
+            // <div className="no-results">
+            //   <img src={HeroImage} alt="hero" />
 
-              {!isOutputGenerated ? (
-                <p>
-                  No Responses Yet!! Paste the YouTuble video URL On input field
-                </p>
-              ) : (
-                <div className="loader-text">
-                  <Spinner /> Generating...
-                </div>
-              )}
-            </div>
+            //   {!isOutputGenerated ? (
+            //     <p>
+            //       No Responses Yet!! Paste the YouTuble video URL On input field
+            //     </p>
+            //   ) : (
+            //     <div className="loader-text">
+            //       <Spinner /> Generating...
+            //     </div>
+            //   )}
+            // </div>
+
+            <></>
           )}
         </div>
+
+        {isLoaddedOnInitialClick ? (
+          <>
+            <div className="previous-responses">
+              <h1 className="title">Previous Responses for - {historyTitle}</h1>
+
+              {fromPreviousResponse.map((tip, index) => (
+                <div className="results" key={index}>
+                  <ul>
+                    <li>{tip}</li>
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            {fromPreviousResponse.length > 0 ? (
+              <>
+                <div className="previous-responses">
+                  <h1 className="title">
+                    Previous Responses for - {historyTitle}
+                  </h1>
+
+                  {hasPreviousResponse ? (
+                    <>
+                      {" "}
+                      {fromPreviousResponse.map((tip, index) => (
+                        <div className="results" key={index}>
+                          <ul>
+                            <li>{tip}</li>
+                          </ul>
+                        </div>
+                      ))}
+                    </>
+                  ) : null}
+                </div>
+              </>
+            ) : (
+              <>
+                <div className="no-results">
+                  <img src={HeroImage} alt="hero" />
+
+                  {!isOutputGenerated ? (
+                    <p>
+                      No Responses Yet!! Paste the YouTuble video URL On input
+                      field
+                    </p>
+                  ) : (
+                    <div className="loader-text">
+                      <Spinner /> Generating...
+                    </div>
+                  )}
+                </div>
+              </>
+            )}
+          </>
+        )}
       </div>
     </SuggestionsPageContainer>
   );
