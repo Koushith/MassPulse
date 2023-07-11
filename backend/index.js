@@ -1,6 +1,10 @@
 import express from "express";
-import connectDB from "./utils/db.js";
+
 import cors from "cors";
+
+import dotenv from 'dotenv';
+
+import connectDB from "./utils/db.js";
 import {
     addNewVideo,
     getAllVideos,
@@ -11,6 +15,8 @@ import {
 const PORT = process.env.PORT || 8000;
 const app = express();
 
+
+dotenv.config()
 const corsConfig = {
     origin: [
         "https://masspulse.xyz",
