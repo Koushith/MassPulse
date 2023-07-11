@@ -137,13 +137,16 @@ export const SuggestionsPage = () => {
 
         prompt: `Following are the comments from a YouTube video:\n\n + ${JSON.stringify(
           extractedComments
+        ).slice(
+          0,
+          8000
         )} + \n\n Please provide suggestions to improve the content based on these comments.
         Include references to the exact comments when giving your suggestions.`,
         max_tokens: 1200,
       });
 
       const res1 = response.data.choices[0].text;
-      console.log("final response from ai----", res1?.length);
+
       //@ts-ignore
       setFinalResponse([res1]);
 
@@ -166,15 +169,13 @@ export const SuggestionsPage = () => {
     try {
       //get comments and set the new
       setHistoryTitle(videoTitle);
-      console.log(videoLink);
+
       const extractedId = extractYouTubeVideoId(videoLink);
-      console.log("extractedid", extractedId);
-      console.log("vlideo link,", videoLink);
-      console.log("videoTitle,", videoTitle);
+
       const { data } = await axios.get(
         `${BACKEND_BASE_URL}/video/search/${extractedId}`
       );
-      console.log("prev resp ======----====-", data);
+
       setFromPreviousResponse(data.video);
       setIsLoadedOnInitialClick(true);
       setHasPreviosResponse(true);
