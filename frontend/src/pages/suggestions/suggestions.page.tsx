@@ -132,19 +132,32 @@ export const SuggestionsPage = () => {
 
       const openai = new OpenAIApi(configuration);
 
-      const response = await openai.createCompletion({
-        model: "text-davinci-003",
-        prompt: `Following are the comments from a YouTube video:\n\n + ${JSON.stringify(
-          extractedComments
-        ).slice(
-          0,
-          8000
-        )} + \n\n Please provide suggestions to improve the content based on these comments.
+      const response = await openai.createChatCompletion({
+        model: "gpt-3.5-turbo",
+        // prompt: `Following are the comments from a YouTube video:\n\n + ${JSON.stringify(
+        //   extractedComments
+        // ).slice(
+        //   0,
+        //   8000
+        // )} + \n\n Please provide suggestions to improve the content based on these comments.
+        // Include references to the exact comments when giving your suggestions.`,
+        //  max_tokens: 1200,
+        messages: [
+          {
+            role: "user",
+            content: `Following are the comments from a YouTube video:\n\n + ${JSON.stringify(
+              extractedComments
+            ).slice(
+              0,
+              8000
+            )} + \n\n Please provide suggestions to improve the content based on these comments.
         Include references to the exact comments when giving your suggestions.`,
-        max_tokens: 1200,
+          },
+        ],
+        //max_tokens: 3000,
       });
 
-      const res1 = response.data.choices[0].text;
+      const res1 = response.data.choices[0].message?.content;
 
       //@ts-ignore
       setFinalResponse([res1]);
